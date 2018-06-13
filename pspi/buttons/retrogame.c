@@ -1168,15 +1168,14 @@ int main(int argc, char *argv[]) {
 	                ((extstate[a] & b) == b)) {
 	                printf("hold\n");
 	                intstate[a] &= ~b; // Remove GPIO37 press
+	                lastKey = -99; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
 	              else if((intstate[a] & b) != b) {
 	                printf("release\n");
 	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
 	                extstate[a] &= ~b; // Remove previous GPIO37 press
-	                // Set a temporary sentinel value so we don't stuck
-	                // in an infinite loop
-	                lastKey = -99;
+	                lastKey = -98; // Set temporary sentinel value
 	              }
 	            }
 	          }
@@ -1198,9 +1197,14 @@ int main(int argc, char *argv[]) {
 	              /*******************************************************/
 	              // PSPI Hold Button Additional Code
 	              /*******************************************************/
-	              // Check if temporary sentinel value for Hold release
+	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -99) {
+	                extstate[a] |= b; // Add previous GPIO37 press
+	              }
+	              // Check if temporary sentinel value for Hold release
+	              // code is set
+	              if(lastKey == -98) {
 	                extstate[a] &= ~b; // Remove previous GPIO37 press
 	              }
 	              // Check that we aren't on the Hold event (i = 37)
