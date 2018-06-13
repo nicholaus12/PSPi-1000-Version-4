@@ -1167,7 +1167,7 @@ int main(int argc, char *argv[]) {
 	              else if(((intstate[a] & b) == b) &&
 	                ((extstate[a] & b) == b)) {
 	                printf("hold\n");
-	                intstate[a] &= ~b; // Remove GPIO37 press
+	                intstate[a] &= 65247; // Remove GPIO37 press
 	                lastKey = -99; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
@@ -1194,9 +1194,19 @@ int main(int argc, char *argv[]) {
 	            c = 1; // Follow w/SYN event
 	            if(intstate[a] & b) { // Press?
 	              // Note pressed key and set initial repeat interval.
+	              //lastKey = i; /*** Commented out for PSPI ***/
+	              //timeout = repTime1; /*** Commented out for PSPI ***/
 	              /*******************************************************/
 	              // PSPI Hold Button Additional Code
 	              /*******************************************************/
+	              // Check that Hold event (i = 37) wasn't "pressed"
+	              if(lastKey != 37) {
+	                lastKey = i;
+	                timeout = repTime1;
+	              }
+	              else {
+	                timeout = debounceTime; // Set timeout back to debounce
+	              }
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -99) {
@@ -1204,16 +1214,10 @@ int main(int argc, char *argv[]) {
 	              }
 	              // Check if temporary sentinel value for Hold release
 	              // code is set
-	              if(lastKey == -98) {
+	              else if(lastKey == -98) {
 	                extstate[a] &= ~b; // Remove previous GPIO37 press
 	              }
-	              // Check that we aren't on the Hold event (i = 37)
-	              if(i != 37) {
-	                timeout = repTime1;
-	              }
 	              /*******************************************************/
-	              lastKey = i;
-	              //timeout = repTime1; /*** Commented out for PSPI ***/
 	              if(debug >= 3) {
 	                printf("%s: GPIO%02d key press code %d\n",
 	                  __progname, i, key[i]);
