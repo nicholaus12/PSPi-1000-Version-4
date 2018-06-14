@@ -1209,7 +1209,7 @@ int main(int argc, char *argv[]) {
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -98) {
-	                extstate[a] &= 65247; // Remove previous GPIO37 press
+	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
 	              if(debug >= 3) {
@@ -1223,7 +1223,7 @@ int main(int argc, char *argv[]) {
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -99) {
-	                extstate[a] |= 288; // Add previous GPIO37 press
+	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
 	              // Stop repeat and return to normal IRQ monitoring
