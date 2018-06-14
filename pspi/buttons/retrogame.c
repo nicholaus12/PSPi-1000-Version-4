@@ -1168,13 +1168,14 @@ int main(int argc, char *argv[]) {
 	                ((extstate[a] & b) == b)) {
 	                printf("hold\n");
 	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
-	                lastKey = -99; // Set temporary sentinel value
+	                lastKey = -9; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
 	              else if((intstate[a] & b) != b) {
 	                printf("release\n");
 	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
-	                lastKey = -98; // Set temporary sentinel value
+	                extstate[a] &= ~b; // Remove GPIO37 press
+	                lastKey = -8; // Set temporary sentinel value
 	              }
 	            }
 	          }
@@ -1208,7 +1209,7 @@ int main(int argc, char *argv[]) {
 	              }
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
-	              if(lastKey == -98) {
+	              if(lastKey == -8) {
 	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
@@ -1222,7 +1223,7 @@ int main(int argc, char *argv[]) {
 	              /*******************************************************/
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
-	              if(lastKey == -99) {
+	              if(lastKey == -9) {
 	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
