@@ -1208,12 +1208,7 @@ int main(int argc, char *argv[]) {
 	              }
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
-	              if(lastKey == -99) {
-	                extstate[a] |= b; // Add previous GPIO37 press
-	              }
-	              // Check if temporary sentinel value for Hold release
-	              // code is set
-	              else if(lastKey == -98) {
+	              if(lastKey == -98) {
 	                extstate[a] &= ~b; // Remove previous GPIO37 press
 	              }
 	              /*******************************************************/
@@ -1222,6 +1217,15 @@ int main(int argc, char *argv[]) {
 	                  __progname, i, key[i]);
 	              }
 	            } else { // Release?
+	              /*******************************************************/
+	              // PSPI Hold Button Additional Code
+	              /*******************************************************/
+	              // Check if temporary sentinel value for Hold hold
+	              // code is set
+	              if(lastKey == -99) {
+	                extstate[a] |= b; // Add previous GPIO37 press
+	              }
+	              /*******************************************************/
 	              // Stop repeat and return to normal IRQ monitoring
 	              // (no timeout).
 	              lastKey = timeout = -1;
