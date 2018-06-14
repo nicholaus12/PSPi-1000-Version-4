@@ -1157,7 +1157,7 @@ int main(int argc, char *argv[]) {
 	            // previously "pressed"
 	            else if((i == 37) && (((intstate[a] & 288) == b) ||
 	              ((extstate[a] & b) == b))) {
-	              printf("enter\n");
+	              printf("int: %d, ext: %d, b: %d\n", intstate[a], extstate[a], b);
 	              // Check that Hold wasn't being "pressed"
 	              if((extstate[a] & b) != b) {
 	                printf("press\n");
@@ -1167,7 +1167,7 @@ int main(int argc, char *argv[]) {
 	              else if(((intstate[a] & b) == b) &&
 	                ((extstate[a] & b) == b)) {
 	                printf("hold\n");
-	                intstate[a] &= 65247; // Remove GPIO37 press
+	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
 	                lastKey = -99; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
