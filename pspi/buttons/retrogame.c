@@ -1162,19 +1162,21 @@ int main(int argc, char *argv[]) {
 	              if((extstate[a] & b) != b) {
 	                printf("press\n");
 	                intstate[a] |= 256; // Add GPIO40 press
+	                extstate[a] &= 65247;
 	              }
 	              // Check that Hold is being "pressed"
 	              else if(((intstate[a] & b) == b) &&
 	                ((extstate[a] & b) == b)) {
 	                printf("hold\n");
 	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
+	                extstate[a] |= 288;
 	                lastKey = -9; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
 	              else if((intstate[a] & b) != b) {
 	                printf("release\n");
 	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
-	                extstate[a] &= ~b; // Remove GPIO37 press
+	                extstate[a] &= 65247; // Remove GPIO37 press
 	                lastKey = -8; // Set temporary sentinel value
 	              }
 	            }
@@ -1210,6 +1212,7 @@ int main(int argc, char *argv[]) {
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -8) {
+	                //intstate[a] &= 65247;
 	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
@@ -1224,7 +1227,8 @@ int main(int argc, char *argv[]) {
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
 	              if(lastKey == -9) {
-	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
+	                intstate[a] &= 65247;
+	                extstate[a] |= 32; // Add previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
 	              // Stop repeat and return to normal IRQ monitoring
