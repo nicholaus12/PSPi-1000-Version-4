@@ -1174,7 +1174,6 @@ int main(int argc, char *argv[]) {
 	              else if((intstate[a] & b) != b) {
 	                printf("release\n");
 	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
-	                extstate[a] &= ~b; // Remove previous GPIO37 press
 	                lastKey = -98; // Set temporary sentinel value
 	              }
 	            }
