@@ -1187,9 +1187,7 @@ int main(int argc, char *argv[]) {
 	            // be done by typedefing a structure with bit fields...
 	            // it'd be doing about the same thing behind the scenes,
 	            // but might be more legible in source form.
-	            extstate[a] = (intstate[a] & b);
-				/*** Commented out for PSPI ***/
-	            //extstate[a] = (extstate[a] & ~b) | (intstate[a] & b);
+	            extstate[a] = (extstate[a] & ~b) | (intstate[a] & b);
 	            keyEv.code = key[i];
 	            keyEv.value = ((intstate[a] & b) > 0);
 	            write(keyfd, &keyEv, sizeof(keyEv));
@@ -1200,7 +1198,7 @@ int main(int argc, char *argv[]) {
 	              /*******************************************************/
 	              // Check that Hold isn't "pressed"
 	              if(intstate[a] & 32) {
-	                timeout = -1; // Return to normal IRQ monitoring
+	                timeout = debounceTime//-1; // Return to normal IRQ monitoring
 	              } else {
 	                timeout = repTime1;
 	              }
