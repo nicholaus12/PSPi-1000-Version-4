@@ -1156,26 +1156,26 @@ int main(int argc, char *argv[]) {
 	            // (intstate = xxxx xxx0 xx1x xxxx = 32), or that it was
 	            // previously "pressed"
 	            else if((i == 37) && (((intstate[a] & 288) == b) ||
-	              ((extstate[a] & b) == b))) {
+	              (extstate[a] & b))) {
 	              printf("int: %d, ext: %d, b: %d\n", intstate[a], extstate[a], b);
 	              // Check that Hold wasn't being "pressed"
-	              if((extstate[a] & b) != b) {
+	              if(!(extstate[a] & b)) {
 	                printf("press\n");
 	                intstate[a] |= 256; // Add GPIO40 press
 	              }
 	              // Check that Hold is being "pressed"
-	              else if(((intstate[a] & b) == b) &&
-	                ((extstate[a] & b) == b)) {
+	              else if((intstate[a] & b) &&
+	                (extstate[a] & b)) {
 	                printf("hold\n");
 	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
-	                lastKey = -9; // Set temporary sentinel value
+	                lastKey = -99; // Set temporary sentinel value
 	              }
 	              // Check that Hold isn't being "pressed"
-	              else if((intstate[a] & b) != b) {
+	              else if(!(intstate[a] & b)) {
 	                printf("release\n");
 	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
 	                extstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
-	                lastKey = -8; // Set temporary sentinel value
+	                lastKey = -98; // Set temporary sentinel value
 	              }
 	            }
 	          }
@@ -1187,31 +1187,33 @@ int main(int argc, char *argv[]) {
 	            // be done by typedefing a structure with bit fields...
 	            // it'd be doing about the same thing behind the scenes,
 	            // but might be more legible in source form.
-	            extstate[a] = (extstate[a] & ~b) | (intstate[a] & b);
+	            extstate[a] = (intstate[a] & b);
+				/*** Commented out for PSPI ***/
+	            //extstate[a] = (extstate[a] & ~b) | (intstate[a] & b);
 	            keyEv.code = key[i];
 	            keyEv.value = ((intstate[a] & b) > 0);
 	            write(keyfd, &keyEv, sizeof(keyEv));
 	            c = 1; // Follow w/SYN event
 	            if(intstate[a] & b) { // Press?
-	              // Note pressed key and set initial repeat interval.
-	              //lastKey = i; /*** Commented out for PSPI ***/
-	              //timeout = repTime1; /*** Commented out for PSPI ***/
 	              /*******************************************************/
 	              // PSPI Hold Button Additional Code
 	              /*******************************************************/
-	              // Check that Hold event (i = 37) wasn't "pressed"
-	              if(lastKey != 37) {
-	                lastKey = i;
-	                timeout = repTime1;
+	              // Check that Hold isn't "pressed"
+	              if(intstate[a] & 32) {
+	                timeout = -1; // Return to normal IRQ monitoring
 	              } else {
-	                timeout = -1; // Set timeout back to default
+	                timeout = repTime1;
 	              }
-	              // Check if temporary sentinel value for Hold hold
+	              // Check if temporary sentinel value for Hold release
 	              // code is set
-	              if(lastKey == -8) {
+	              if(lastKey == -98) {
+	                printf("/release\n");
 	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
+	              // Note pressed key and set initial repeat interval.
+	              lastKey = i;
+	              //timeout = repTime1; /*** Commented out for PSPI ***/
 	              if(debug >= 3) {
 	                printf("%s: GPIO%02d key press code %d\n",
 	                  __progname, i, key[i]);
@@ -1222,7 +1224,8 @@ int main(int argc, char *argv[]) {
 	              /*******************************************************/
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
-	              if(lastKey == -9) {
+	              if(lastKey == -99) {
+	                printf("/hold\n");
 	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
 	              }
 	              /*******************************************************/
