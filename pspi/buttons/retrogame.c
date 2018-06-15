@@ -1164,19 +1164,19 @@ int main(int argc, char *argv[]) {
 	                intstate[a] |= 256; // Add GPIO40 press
 	              }
 	              // Check that Hold is being "pressed"
-	              else if((intstate[a] & b) &&
-	                (extstate[a] & b)) {
-	                printf("hold\n");
-	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
-	                lastKey = -99; // Set temporary sentinel value
-	              }
+//	              else if((intstate[a] & b) &&
+//	                (extstate[a] & b)) {
+//	                printf("hold\n");
+//	                intstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
+//	                lastKey = -99; // Set temporary sentinel value
+//	              }
 	              // Check that Hold isn't being "pressed"
-	              else if(!(intstate[a] & b)) {
-	                printf("release\n");
-	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
-	                extstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
-	                lastKey = -98; // Set temporary sentinel value
-	              }
+//	              else if(!(intstate[a] & b)) {
+//	                printf("release\n");
+//	                intstate[a] |= 288; // Add GPIO37 and GPIO40 press
+//	                extstate[a] &= 65247; // Remove GPIO37 and GPIO40 press
+//	                lastKey = -98; // Set temporary sentinel value
+//	              }
 	            }
 	          }
 	          /***********************************************************/
@@ -1197,17 +1197,17 @@ int main(int argc, char *argv[]) {
 	              // PSPI Hold Button Additional Code
 	              /*******************************************************/
 	              // Check that Hold isn't "pressed"
-	              if(intstate[a] & 32) {
-	                timeout = debounceTime//-1; // Return to normal IRQ monitoring
-	              } else {
+//	              if(intstate[a] & 32) {
+//	                timeout = debounceTime//-1; // Return to normal IRQ monitoring
+//	              } else {
 	                timeout = repTime1;
-	              }
+//	              }
 	              // Check if temporary sentinel value for Hold release
 	              // code is set
-	              if(lastKey == -98) {
-	                printf("/release\n");
-	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
-	              }
+//	              if(lastKey == -98) {
+//	                printf("/release\n");
+//	                extstate[a] &= 65247; // Remove previous GPIO37 and GPIO40 press
+//	              }
 	              /*******************************************************/
 	              // Note pressed key and set initial repeat interval.
 	              lastKey = i;
@@ -1222,10 +1222,10 @@ int main(int argc, char *argv[]) {
 	              /*******************************************************/
 	              // Check if temporary sentinel value for Hold hold
 	              // code is set
-	              if(lastKey == -99) {
-	                printf("/hold\n");
-	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
-	              }
+//	              if(lastKey == -99) {
+//	                printf("/hold\n");
+//	                extstate[a] |= 288; // Add previous GPIO37 and GPIO40 press
+//	              }
 	              /*******************************************************/
 	              // Stop repeat and return to normal IRQ monitoring
 	              // (no timeout).
